@@ -30,14 +30,11 @@ else
 		function insert {
 			echo "Enter field number $x:"
 			read field
-			if [ $field == "ID" ]
-			then
-			echo "ID must be unique"
-			insert
-			else
-			while [ -z $field ] || [ "${field//[!0-9]}" != "" ] || [[ $field =~ ['!@#$%^&*()_+'] ]]
+			
+
+			while [ -z $field ] || [ "${field//[!0-9]}" != "" ] || [[ $field =~ ['!@#$%^&*()_+'] ]] || [ $field == "ID" ]
 			do
-				echo "invalid value for field name"
+				echo "invalid value for field name or Duplicated"
 				read field
 			done
 			col+="$field"
@@ -74,7 +71,7 @@ else
 					* ) echo "Invalid choice";
 				esac
 			done
-			fi
+		
 		}
 		# =====================================================================
 		insert

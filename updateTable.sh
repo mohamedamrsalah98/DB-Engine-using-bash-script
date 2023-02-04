@@ -1,7 +1,11 @@
 #!/bin/bash 
-cd $DBName
-# echo " enter the name of the table you want to update in it"
+
+ cd $DBName
+
+function updateHeader(){
+#     echo " enter the name of the table you want to update in it"
 # read tableUpdate
+
 while [ -z $table ] || [ "${table//[!0-9]}" != "" ] || [[ $table =~ ['!@#$%^&*()_+'] ]] || ! [ -f $table ]
 do    
     echo "Invalid Input & Please enter a valid value"
@@ -54,4 +58,56 @@ done
         cd .. 
         source updateTable.sh
     fi
-    
+}
+# cat $table
+# read -p "enter record you would to update" reco
+
+# awk -F : '{print $0}' $table sed -n '3,$p' | grep $reco 
+# //////////////////////////////////////////////////////////////////////////////////////////
+
+function updateColumn(){
+
+cat $table
+ 
+	read -p "Row number: " rowNum
+    while ! [[ "$rowNum" =~ ^[0-9]+$ ]] || [[  $rowNum -gt ` awk -F : 'END{print NR}' $table `   ]]
+    do  
+        read -p "invalid value for Row Number & Enter an int value please" rowNum
+    done
+   
+	read -p "Column name: " colName
+    while [ -z $colName ] || [ "${colName//[!0-9]}" != "" ] || [[ $colName =~ ['!@#$%^&*()_+'] ]] || ! [[ `awk -F : 'NR==1{print $0}' $table | grep $colName` ]]
+    do
+        read -p "Invalid Column Name & enter a valid value" colName
+    done
+
+    ColNum=`awk -F":" '{for(i=1;i<=NF;i++){if( $i == "'$colName'" )print i}}' $table`
+	val=`awk -F":" 'NR=='$rowNum' {print $'$ColNum'}' $table`
+    read -p "Enter New Value You want to update " newVal
+    sed -i "s/$val/$newVal/" $table
+    cat $table
+
+
+}
+
+ select option in "Update Header" "Update Column" "Back To Menu"
+do
+    case $option in 
+        "Update Header")
+
+           updateHeader
+            ;;
+        "Update Column")
+
+           updateColumn
+            ;;
+              "Back To Menu")
+              clear;
+              echo "######################### Welcome $table ################################";
+            cd ..;
+            source select.sh
+            ;;
+        *)  clear ; echo "Incorrect Choice try again" ;
+         cd ..; source updateTable.sh  ;;
+    esac
+done

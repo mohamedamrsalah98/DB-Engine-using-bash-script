@@ -21,6 +21,7 @@ do
             ;;
         "Back To Table Options")
             clear ;
+            echo "######################### Welcome $DBName ################################";
              cd ..;
              source tableInfo.sh
             ;;
