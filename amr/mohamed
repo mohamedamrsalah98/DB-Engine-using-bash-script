@@ -1,0 +1,5 @@
+ID:Fullname:number:address
+int (Not NULL):string:int (Not NULL):string (Not NULL)
+1:Ali:70:Fayoum
+2:alaa:33:octobar
+3:zenhom david:44:cairo
